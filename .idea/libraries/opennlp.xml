@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="opennlp">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/newLib/opennlp.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
