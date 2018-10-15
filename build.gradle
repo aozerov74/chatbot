@@ -1,0 +1,157 @@
+group 'com.chatbot'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    versions = [
+        jerseyVersion : '2.25.1',
+        jetty_server: '9.4.5.v20170502',
+        jackson: '2.9.6',
+        jackson_asl: '1.9.13',
+        jaxrs: '2.0.1',
+        jersey: '2.25.1',
+        jersey_apache_connector: '2.25.1',
+        json: '20160212',
+        commons_io: '2.4',
+        commons_lang3: '3.5',
+        stanford: '3.9.2',
+        stanford_parser: '3.9.1',
+        stanford_adept: '2.7.3',
+        stanford_kbp: '1.0.0',
+        opennlp: '1.9.0',
+        tika: '1.19.1',
+        jverbnet: '1.2.0'
+    ]
+
+    dependencyManagement = [
+            jverbnet: [
+                    "edu.mit:jverbnet:${versions.jverbnet}"
+            ],
+            tika: [
+                    "org.apache.tika:tika:${versions.tika}",
+                    "org.apache.tika:tika-core:${versions.tika}"
+            ],
+            opennlp: [
+                    "org.apache.opennlp:opennlp-tools:${versions.opennlp}"
+            ],
+            stanford_kbp: [
+                    "edu.stanford.nlp:stanford-kbp:${versions.stanford_kbp}"
+            ],
+            stanford_nlp: [
+                    "edu.stanford.nlp:stanford-corenlp:${versions.stanford}",
+                    "edu.stanford.nlp:stanford-parser:${versions.stanford_parser}",
+                    "edu.stanford.nlp:stanford-adept:${versions.stanford_adept}",
+                    "edu.stanford.nlp:stanford-kbp:${versions.stanford_kbp}"
+            ],
+            jaxrs_api: [
+                    "javax.ws.rs:javax.ws.rs-api:${versions.jaxrs}"
+            ],
+            jersey_apache_connector: [
+                    "org.glassfish.jersey.connectors:jersey-apache-connector:${versions.jersey_apache_connector}"
+            ],
+            jersey_client: [
+                    "org.glassfish.jersey.core:jersey-client:${versions.jersey}"
+            ],
+            jersey_common: [
+                    "org.glassfish.jersey.core:jersey-common:${versions.jersey}"
+            ],
+            jersey_media: [
+                    "org.glassfish.jersey.media:jersey-media-multipart:${versions.jersey}",
+                    "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jersey}"
+            ],
+            jersey_server: [
+                    "org.glassfish.jersey.core:jersey-server:${versions.jersey}",
+                    "org.glassfish.jersey.containers:jersey-container-servlet-core:${versions.jersey}",
+                    "org.glassfish.jersey.containers:jersey-container-jetty-http:${versions.jersey}",
+                    "org.glassfish.jersey.media:jersey-media-json-jackson:${versions.jersey}"
+            ],
+            jetty_server: [
+                    "org.eclipse.jetty:jetty-server:${versions.jetty_server}",
+                    "org.eclipse.jetty:jetty-servlet:${versions.jetty_server}",
+					"org.eclipse.jetty:jetty-webapp:${versions.jetty_server}",
+                    "org.eclipse.jetty:jetty-rewrite:${versions.jetty_server}"
+            ],
+            jackson_asl: [
+                    "org.codehaus.jackson:jackson-core-asl:${versions.jackson_asl}",
+                    "org.codehaus.jackson:jackson-mapper-asl:${versions.jackson_asl}"
+            ],
+            jackson_core: [
+                    "com.fasterxml.jackson.core:jackson-core:${versions.jackson}"
+            ],
+            jackson_datatype: [
+                    "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${versions.jackson}"
+            ],
+            json: [
+                    "org.json:json:${versions.json}"
+            ],
+            commons_io: [
+                    "commons-io:commons-io:${versions.commons_io}"
+            ],
+            commons_lang3: [
+                    "org.apache.commons:commons-lang3:${versions.commons_lang3}"
+            ],
+            jackson_datatype: [
+                    "com.fasterxml.jackson.datatype:jackson-datatype-json-org:${versions.jackson}"
+            ],
+            jackson_2x: [
+                    "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}",
+                    "com.fasterxml.jackson.core:jackson-annotations:${versions.jackson}",
+                    "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${versions.jackson}"
+            ],
+            annotations: [
+                    "com.fasterxml.jackson.core:jackson-annotations:${versions.jackson}"
+            ],
+    ]
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+    compile "org.glassfish.jersey.core:jersey-server:${versions.jerseyVersion}"
+    compile "org.glassfish.jersey:jersey-bom:${versions.jerseyVersion}"
+    compile "org.glassfish.jersey.containers:jersey-container-servlet-core:${versions.jerseyVersion}"
+
+    compile dependencyManagement.jetty_server
+    compile dependencyManagement.jersey_client
+    compile dependencyManagement.jersey_media
+    compile dependencyManagement.jersey_server
+    compile dependencyManagement.json
+    compile dependencyManagement.commons_io
+    compile dependencyManagement.commons_lang3
+
+    compile dependencyManagement.jackson_asl
+    compile dependencyManagement.jackson_datatype
+    compile dependencyManagement.jackson_2x
+
+    runtime dependencyManagement.jackson_asl
+    runtime dependencyManagement.jackson_datatype
+    runtime dependencyManagement.jackson_2x
+
+    //compile files('lib/cb_0.17.jar')
+    compile dependencyManagement.stanford_nlp
+    compile dependencyManagement.opennlp
+    compile dependencyManagement.stanford_kbp
+
+    runtime dependencyManagement.tika
+    runtime dependencyManagement.jverbnet
+
+    compile files('newLib/opennlp.jar')
+}
+
+jar {
+    manifest {
+        attributes('Main-Class': 'ChatbotApiHost',
+        "Class-Path": configurations.compile.collect { it.getName() }.join(' '))
+    }
+}
+
+defaultTasks 'build'
