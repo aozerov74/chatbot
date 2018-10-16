@@ -31,12 +31,6 @@ public class ChatbotApiHost {
     }
 
     protected void start() throws Exception {
-        System.setProperty("http.proxyHost", "www-proxy.us.oracle.com");
-        System.setProperty("http.proxyPort", "80");
-
-        System.setProperty("https.proxyHost", "www-proxy.us.oracle.com");
-        System.setProperty("https.proxyPort", "80");
-
         HttpServerConfig config = getHttpServerConfig();
 
         Handler apiHandler = new HttpServletContextHandlerBuilder()
